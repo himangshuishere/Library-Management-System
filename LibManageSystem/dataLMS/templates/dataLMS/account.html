@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+</head>
+<body>
+    <h1>{{ object.username }}</h1>
+    <h2>{{ object.email }}</h2>
+    <button><a href="{% url 'logoutView' %}">Log Out</a></button>
+    <hr>
+    <h2>Your Issued Books:</h2><br>
+    <ul>
+        {% for items in bookData %}
+            <li><a href="{{ items.get_absolute_url }}">{{ items }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
