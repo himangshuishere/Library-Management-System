@@ -10,12 +10,19 @@
     <h1>{{ object.username }}</h1>
     <h2>{{ object.email }}</h2>
     <button><a href="{% url 'logoutView' %}">Log Out</a></button>
+    <button><a href="{% url 'books' %}">Home</a></button>
     <hr>
-    <h2>Your Issued Books:</h2><br>
-    <ul>
-        {% for items in bookData %}
-            <li><a href="{{ items.get_absolute_url }}">{{ items }}</a></li>
-        {% endfor %}
-    </ul>
+    {% if issueStatus != False %}
+        <h2>Your Issued Books:</h2><br>
+        <ul>
+            {% for items in bookData %}
+                <li><a href="{{ items.get_absolute_url }}">{{ items }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>
+            {{ error }}
+        </h3>
+    {% endif %}
 </body>
 </html>

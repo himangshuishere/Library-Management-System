@@ -21,12 +21,13 @@ class Books(models.Model):
         verbose_name_plural = "Books"
 
 class IssuedBooks(models.Model):
-    issuer = models.EmailField(primary_key=True, default=None)
+    issueID = models.UUIDField(default=uuid.uuid4, blank=True, editable=False, primary_key=True)
+    issuer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     issuedBook = models.ForeignKey(Books, on_delete=models.CASCADE, null=True, related_name='book')
     issuedAt = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.issuer
+        return self.issuer.email
     
     class Meta:
         verbose_name_plural = 'Issued Books'
