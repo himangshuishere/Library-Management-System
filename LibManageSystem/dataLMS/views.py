@@ -43,6 +43,9 @@ class LoginView(View):
         if loginForm.is_valid():
             a = request.POST['password']
             if User.objects.filter(email=request.POST['email']).exists():
+                if 'email' in request.session.keys():
+                    if request.POST['email'] == request.session['email']:
+                        return render(request, 'dataLMS/login.html', {'form':loginForm, 'error':'User already logged in!'})
                 if User.objects.get(email=request.POST['email']).password == a:
                     
                     request.session['email'] = request.POST['email']
