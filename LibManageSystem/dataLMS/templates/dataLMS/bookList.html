@@ -7,8 +7,22 @@
     <title>Books</title>
 </head>
 <body>
-    {% for books in object_list %}
-        <a href="{{books.get_absolute_url}}"><strong>{{ books.title }}</strong></a> by {{ books.author }} <br>
+    <nav>
+        <div>List of Available Books</div>
+        {% if data %}
+            <div>
+                <a href="{% url 'account' %}">Account</a>
+                <a href="{% url 'logout' %}">Sign Out</a>
+            </div>
+        {% else %}
+            <div>
+                <a href="{% url 'login' %}">Sign In</a>
+                <a href="{% url 'register' %}">Sign Up</a>
+            </div>
+        {% endif %}
+    </nav>
+    {% for book in books %}
+        <a href="{{book.get_absolute_url}}"><strong>{{ book.title }}</strong></a> by {{ book.author }} <br>
     {% endfor %}
 </body>
 </html>

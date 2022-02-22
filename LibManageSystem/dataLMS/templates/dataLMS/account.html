@@ -9,7 +9,7 @@
 <body>
     <h1>{{ object.username }}</h1>
     <h2>{{ object.email }}</h2>
-    <button><a href="{% url 'logoutView' %}">Log Out</a></button>
+    <button><a href="{% url 'logout' %}">Log Out</a></button>
     <button><a href="{% url 'books' %}">Home</a></button>
     <hr>
     {% if issueStatus != False %}

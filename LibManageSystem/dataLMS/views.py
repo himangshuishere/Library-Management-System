@@ -46,20 +46,26 @@ class LoginView(View):
                 if 'email' in request.session.keys():
                     if request.POST['email'] == request.session['email']:
                         return render(request, 'dataLMS/login.html', {'form':loginForm, 'error':'User already logged in!'})
-                if User.objects.get(email=request.POST['email']).password == a:
-                    
-                    request.session['email'] = request.POST['email']
-                    return HttpResponseRedirect(reverse('account'))
-
                 else:
-                    return render(request, 'dataLMS/login.html', {'form':loginForm, 'error':'Password invalid'})
+                    if User.objects.get(email=request.POST['email']).password == a:
+                        
+                        request.session['email'] = request.POST['email']
+                        return HttpResponseRedirect(reverse('account'))
+
+                    else:
+                        return render(request, 'dataLMS/login.html', {'form':loginForm, 'error':'Password invalid'})
             else:
                 return render(request, 'dataLMS/login.html', {'form':loginForm, 'error':'Email Does not Exist'})
 
 
-class BookListView(ListView):
-    model = Books
-    template_name = 'dataLMS/bookList.html'
+class BookListView(View):
+    def get(self, request):
+        books = Books.objects.all()
+        if 'email' in request.session.keys():
+            return render(request, 'dataLMS/bookList.html', {'books':books, 'data':True})
+        return render(request, 'dataLMS/bookList.html', {'books':books})
+
+
 
 class BookDetailView(View):
 
@@ -93,10 +99,11 @@ class AccountView(View):
                 return render(request, 'dataLMS/account.html', {'object':object, 'bookData':context, 'issueStatus':False, 'error':'No books Issued!'})
             return render(request, 'dataLMS/account.html', {'object':object, 'bookData':context, 'issueStatus':True})
         except Exception as e:
-            return HttpResponseRedirect(reverse('login'))
+            return HttpResponse(e)
+            # return HttpResponseRedirect(reverse('login'))
 
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse('login'))
+        return HttpResponseRedirect(reverse('books'))
