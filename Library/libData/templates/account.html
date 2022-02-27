@@ -9,10 +9,11 @@
 <body>
     <div>
         <div>
-            {% for items in details %}
-                <h1>Your Name: {{ items.userName }}</h1>
-                <h2>Your Email: {{ items.userEmail }}</h2>
-            {% endfor %}
+            <h1>Your Name: {{ details.userName }}</h1>
+            <h2>Your Email: {{ details.userEmail }}</h2>
+        </div>
+        <div>
+            <button><a href="{% url 'logout' %}">Sign Out</a></button>
         </div>
     </div>
 </body>

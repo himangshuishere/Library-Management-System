@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect
+from calendar import c
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -24,27 +25,36 @@ class AccountPage(View):
     model = UsersModel
 
     def get(self, request):
-        return render(request, self.template_name, { 'details': UsersModel.objects.get(userID=request.session['userID'])})
+        try:
+            return render(request, self.template_name, { 'details': UsersModel.objects.get(userId=request.session['userId'])})
+        except Exception as e:
+            return HttpResponse('<h1>You are not logged in!</h1>')
 
 
 class BookDetailView(View):
     template_name = 'bookDetails.html'
     model = BooksModel
+    context = {}
 
     def get(self, request, id): # For viewing a book
-        context = {}
         book_id = id
         book = BooksModel.objects.get(bookID=book_id)
-        context['book'] = book
-        return render(request, self.template_name, context)
+        self.context['book'] = book
+        return render(request, self.template_name, self.context)
     
     def post(self, request, id): # For Issuing a book
         book_id = id
         try:
+            if IssuedBooksModel.objects.filter(issuedBook=book_id, issuedBy=request.session['userId']).exists():
+                self.context['error'] = 'You have already issued this book'
+                return render(request, self.template_name, self.context)
+            
             iBook = IssuedBooksModel.objects.create(issuedBy=UsersModel.objects.get(userId=request.session['userId']), issuedBook=BooksModel.objects.get(bookID=book_id))
-            return render(request, self.template_name, {'message': 'Book Issued Successfully'})
+            self.context['message'] = 'Book Issued Successfully'
+            return render(request, self.template_name, self.context)
         except Exception as e:
-            return render(request, self.template_name, {'error': e})
+            self.context['error'] = e
+            return render(request, self.template_name, self.context)
 
 
 class LoginView(View):
@@ -64,6 +74,7 @@ class LoginView(View):
                 return render(request, self.template_name, {'error': 'Invalid Password'})
         except Exception as e:
             return render(request, self.template_name, {'error': 'Invalid Email'})
+# Need to fix login view
 
 
 class RegisterView(View):
@@ -75,8 +86,22 @@ class RegisterView(View):
 
     def post(self, request):
         try:
-            user = UsersModel.objects.create(userName=request.POST['name'], userEmail=request.POST['email'], userPassword=request.POST['password'])
+            if request.POST['password'] != request.POST['password2']:
+                return render(request, self.template_name, {'error': 'Passwords do not match'})
+            
+            if len(request.POST['password']) < 8:
+                return render(request, self.template_name, {'error': 'Password must be atleast 8 characters long'})
+            user = UsersModel.objects.create(userName=request.POST['username'], userEmail=request.POST['email'], userPassword=request.POST['password'])
             request.session['userId'] = user.userId
             return HttpResponseRedirect(reverse('account'))
         except Exception as e:
             return render(request, self.template_name, {'error': e})
+
+
+class LogoutView(View):
+    def get(self, request):
+        try:
+            del request.session['userId']
+        except Exception as e:
+            pass
+        return HttpResponseRedirect(reverse('home'))
