@@ -44,17 +44,18 @@ class BookDetailView(View):
     
     def post(self, request, id): # For Issuing a book
         book_id = id
+        book = BooksModel.objects.get(bookID=book_id)
+        self.context['book'] = book
         try:
-            if IssuedBooksModel.objects.filter(issuedBook=book_id, issuedBy=request.session['userId']).exists():
-                self.context['error'] = 'You have already issued this book'
+            if IssuedBooksModel.objects.filter(issuedBook=book_id, issuedBy=UsersModel.objects.get(userId=request.session['userId'])).exists():
+                self.context['message'] = 'You have already issued this book'
                 return render(request, self.template_name, self.context)
             
             iBook = IssuedBooksModel.objects.create(issuedBy=UsersModel.objects.get(userId=request.session['userId']), issuedBook=BooksModel.objects.get(bookID=book_id))
             self.context['message'] = 'Book Issued Successfully'
             return render(request, self.template_name, self.context)
         except Exception as e:
-            self.context['error'] = e
-            return render(request, self.template_name, self.context)
+            return HttpResponseRedirect(reverse('login'))
 
 
 class LoginView(View):
@@ -69,7 +70,7 @@ class LoginView(View):
             user = UsersModel.objects.get(userEmail=request.POST['email'])
             if user.userPassword == request.POST['password']:
                 request.session['userId'] = user.userId
-                return render(request, 'account.html', {'details': UsersModel.objects.get(userID=request.session['userId'])})
+                return HttpResponseRedirect(reverse('home'))
             else:
                 return render(request, self.template_name, {'error': 'Invalid Password'})
         except Exception as e:
@@ -93,7 +94,7 @@ class RegisterView(View):
                 return render(request, self.template_name, {'error': 'Password must be atleast 8 characters long'})
             user = UsersModel.objects.create(userName=request.POST['username'], userEmail=request.POST['email'], userPassword=request.POST['password'])
             request.session['userId'] = user.userId
-            return HttpResponseRedirect(reverse('account'))
+            return HttpResponseRedirect(reverse('home'))
         except Exception as e:
             return render(request, self.template_name, {'error': e})
 

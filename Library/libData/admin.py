@@ -4,6 +4,8 @@ from .models import UsersModel, BooksModel, IssuedBooksModel
 # Register your models here.
 
 admin.site.register(UsersModel)
+# class UsersModelAdmin(admin.ModelAdmin):
+    # list_display = ('userId',)
 
 @admin.register(BooksModel)
 class BooksModelAdmin(admin.ModelAdmin):
@@ -11,4 +13,6 @@ class BooksModelAdmin(admin.ModelAdmin):
     list_filter = ('bookAuthor',)
     search_fields = ('bookName', 'bookAuthor')
 
-admin.site.register(IssuedBooksModel)
+class IssuedBooksModelAdmin(admin.ModelAdmin):
+    list_display = ('issuedBook', 'issuedBy')
+admin.site.register(IssuedBooksModel, IssuedBooksModelAdmin)

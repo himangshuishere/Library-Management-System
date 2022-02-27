@@ -9,5 +9,14 @@
 <body>
     <h1>{{ book.bookName }}</h1>
     <h2>{{ book.bookAuthor }}</h2>
+    <div>
+        <form action="{{ book.get_absolute_url }}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Issue Book">
+        </form>
+        <div>
+            {{message}}
+        </div>
+    </div>
 </body>
 </html>
