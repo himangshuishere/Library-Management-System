@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 
 class UsersModel(models.Model):
-    userId = models.CharField(default=str(uuid.uuid4().hex).replace('-', ''), editable=False, primary_key=True, max_length=50)
+    userId = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     userName = models.CharField(max_length=50)
     userEmail = models.EmailField(max_length=50, unique=True)
     userPassword = models.CharField(max_length=50)

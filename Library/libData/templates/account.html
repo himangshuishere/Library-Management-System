@@ -14,7 +14,23 @@
         </div>
         <div>
             <button><a href="{% url 'logout' %}">Sign Out</a></button>
+            <button><a href="{% url 'home' %}">Home</a></button>
         </div>
+        <hr>
+        {% if books != None %}
+        <div>
+            <h1>Your Issued Books:</h1>
+        </div>
+        <div>
+            <ul>
+                {% for items in books %}
+                <li><a href="{{ items.issuedBook.get_absolute_url }}">{{ items }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+                <h2>No Books Issued!</h2>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>

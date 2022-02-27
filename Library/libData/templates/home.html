@@ -7,6 +7,19 @@
     <title>Home</title>
 </head>
 <body>
+    <nav>
+        {% if status != True %}
+        <div>
+            <a href="{% url 'login' %}">Sign In</a>
+            <a href="{% url 'register' %}">Sign Up</a>
+        </div>
+        {% else %}
+        <div>
+            <a href="{% url 'account' %}">Account</a>
+            <a href="{% url 'logout' %}">Sign Out</a>
+        </div>
+        {% endif %}
+    </nav>
     <div>
         {% for book in books %}
             <div>

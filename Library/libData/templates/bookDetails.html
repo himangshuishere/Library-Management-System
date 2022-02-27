@@ -7,8 +7,19 @@
     <title>{{ book.bookName }}</title>
 </head>
 <body>
-    <h1>{{ book.bookName }}</h1>
-    <h2>{{ book.bookAuthor }}</h2>
+    <nav>
+        <div>
+            <h4>Book Detail</h4>
+        </div>
+        <div>
+            <button><a href="{% url 'home' %}">Home</a></button>
+        </div>
+    </nav>
+    <h5>Book Name</h5>
+    <h1>
+        {{ book.bookName }}
+    </h1>
+    <h2>Author: {{ book.bookAuthor }}</h2>
     <div>
         <form action="{{ book.get_absolute_url }}" method="post">
             {% csrf_token %}
