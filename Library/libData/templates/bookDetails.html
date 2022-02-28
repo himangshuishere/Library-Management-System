@@ -24,6 +24,7 @@
     <h1>{{ book.bookName }}</h1>
     <h2>Author: {{ book.bookAuthor }}</h2>
     <h3><i> {{ book.bookDescription }} </i></h3>
+
     <div>
       <form action="{{ book.get_absolute_url }}" method="post">
         {% csrf_token %}
