@@ -13,6 +13,11 @@
         </div>
         <div>
             <button><a href="{% url 'home' %}">Home</a></button>
+            {% if status %}
+                <button><a href="{% url 'account' %}">Account</a></button>
+            {% else %}
+                <button><a href="{% url 'login' %}">Sign In</a></button>
+            {% endif %}
         </div>
     </nav>
     <h5>Book Name</h5>

@@ -8,6 +8,9 @@
 </head>
 <body>
     <nav>
+        <div>
+            <h3><a href="{% url 'home' %}">Library Management System</a></h3>
+        </div>
         {% if status != True %}
         <div>
             <a href="{% url 'login' %}">Sign In</a>

@@ -46,6 +46,8 @@ class BookDetailView(View):
     def get(self, request, id): # For viewing a book
         book_id = id
         book = BooksModel.objects.get(bookID=book_id)
+        if 'userEmail' in list(request.session.keys()):
+            return render(request, self.template_name, {'book':book, 'status':True})
         return render(request, self.template_name, {'book':book})
     
     def post(self, request, id): # For Issuing a book

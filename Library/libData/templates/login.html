@@ -7,6 +7,11 @@
     <title>Login</title>
 </head>
 <body>
+    <nav>
+        <div>
+            <h3><a href="{% url 'home' %}">Library Management System</a></h3>
+        </div>
+    </nav>
     <div>
         <div>
             <form action="{% url 'login' %}" method="post">

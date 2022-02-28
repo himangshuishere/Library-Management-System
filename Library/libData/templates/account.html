@@ -7,14 +7,19 @@
     <title>Account Page</title>
 </head>
 <body>
-    <div>
+    <nav>
         <div>
-            <h1>Your Name: {{ details.userName }}</h1>
-            <h2>Your Email: {{ details.userEmail }}</h2>
+            <h3>Your Account</h3>
         </div>
         <div>
             <button><a href="{% url 'logout' %}">Sign Out</a></button>
             <button><a href="{% url 'home' %}">Home</a></button>
+        </div>
+    </nav>
+    <div>
+        <div>
+            <h1>Your Name: {{ details.userName }}</h1>
+            <h2>Your Email: {{ details.userEmail }}</h2>
         </div>
         <hr>
         {% if books != None %}
