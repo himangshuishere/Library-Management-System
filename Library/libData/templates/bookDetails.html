@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ book.bookName }}</title>
-</head>
-<body>
+  </head>
+  <body>
     <nav>
-        <div>
-            <h4>Book Detail</h4>
-        </div>
-        <div>
-            <button><a href="{% url 'home' %}">Home</a></button>
-            {% if status %}
-                <button><a href="{% url 'account' %}">Account</a></button>
-            {% else %}
-                <button><a href="{% url 'login' %}">Sign In</a></button>
-            {% endif %}
-        </div>
+      <div>
+        <h4>Book Detail</h4>
+      </div>
+      <div>
+        <button><a href="{% url 'home' %}">Home</a></button>
+        {% if status %}
+        <button><a href="{% url 'account' %}">Account</a></button>
+        {% else %}
+        <button><a href="{% url 'login' %}">Sign In</a></button>
+        {% endif %}
+      </div>
     </nav>
     <h5>Book Name</h5>
-    <h1>
-        {{ book.bookName }}
-    </h1>
+    <h1>{{ book.bookName }}</h1>
     <h2>Author: {{ book.bookAuthor }}</h2>
+    <h3><i> {{ book.bookDescription }} </i></h3>
     <div>
-        <form action="{{ book.get_absolute_url }}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Issue Book">
-        </form>
-        <div>
-            {{message}}
-        </div>
+      <form action="{{ book.get_absolute_url }}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Issue Book" />
+      </form>
+      <div>{{message}}</div>
     </div>
-</body>
+  </body>
 </html>
