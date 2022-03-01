@@ -27,16 +27,16 @@ class AccountPage(View):
     def get(self, request):
         try:
             try:
-                books = [IssuedBooksModel.objects.get(issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail']))]
-            except IssuedBooksModel.DoesNotExist:
-                books = None
+                books =list(IssuedBooksModel.objects.filter(issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail'])))
+            except Exception as e:
+                books = e
                 return render(request, self.template_name, { 'details': UsersModel.objects.get(userEmail=request.session['userEmail']), 'books':books})
 
             return render(request, self.template_name, { 'details': UsersModel.objects.get(userEmail=request.session['userEmail']), 'books':books})
 
         except Exception as e:
             # return HttpResponse(e)
-            return HttpResponse("<h1> You are not signed in! </h1>")
+            return HttpResponseRedirect(reverse('login'))
 
 
 class BookDetailView(View):
@@ -47,15 +47,17 @@ class BookDetailView(View):
         book_id = id
         book = BooksModel.objects.get(bookID=book_id)
         if 'userEmail' in list(request.session.keys()):
+            if IssuedBooksModel.objects.filter(issuedBook=book_id, issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail'])).exists():
+                return render(request, self.template_name, {'book':book, 'status':True, 'return':True})
+            
             return render(request, self.template_name, {'book':book, 'status':True})
+
         return render(request, self.template_name, {'book':book})
     
     def post(self, request, id): # For Issuing a book
         book_id = id
         book = BooksModel.objects.get(bookID=book_id)
         try:
-            if IssuedBooksModel.objects.filter(issuedBook=book_id, issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail'])).exists():
-                return render(request, self.template_name, {'book':book, 'message':'You Have already issued this book!'})
             
             iBook = IssuedBooksModel.objects.create(issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail']), issuedBook=BooksModel.objects.get(bookID=book_id))
             self.context['message'] = 'Book Issued Successfully'
@@ -63,6 +65,17 @@ class BookDetailView(View):
             # return render(request, self.template_name, {'book':book, 'message':'Book Issued Successfully'})
         except Exception as e:
             return HttpResponseRedirect(reverse('login'))
+
+
+class ReturnBookView(View):
+    def post(self, request, id):
+        book_id = id
+        try:
+            IssuedBooksModel.objects.get(issuedBook=BooksModel.objects.get(bookID=book_id), issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail'])).delete()
+            return HttpResponseRedirect(reverse('account'))
+        except Exception as e:
+            return HttpResponse(e)
+            # return HttpResponseRedirect(reverse('login'))
 
 
 class LoginView(View):

@@ -26,10 +26,19 @@
     <h3><i> {{ book.bookDescription }} </i></h3>
 
     <div>
+        {% if return == True %}
+        <form action="{% url 'return' book.bookID %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Return Book">
+        </form>
+
+        {% else %}
         <form action="{{ book.get_absolute_url }}" method="post">
             {% csrf_token %}
             <input type="submit" value="Issue Book" />
         </form>
+
+        {% endif %}
     </div>
     <div>{{message}}</div>
 </body>
