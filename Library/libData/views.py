@@ -28,11 +28,13 @@ class AccountPage(View):
         try:
             try:
                 books =list(IssuedBooksModel.objects.filter(issuedBy=UsersModel.objects.get(userEmail=request.session['userEmail'])))
+                if len(books) == 0:
+                    books = None
+                return render(request, self.template_name, { 'details': UsersModel.objects.get(userEmail=request.session['userEmail']), 'books':books})
             except Exception as e:
                 books = e
                 return render(request, self.template_name, { 'details': UsersModel.objects.get(userEmail=request.session['userEmail']), 'books':books})
 
-            return render(request, self.template_name, { 'details': UsersModel.objects.get(userEmail=request.session['userEmail']), 'books':books})
 
         except Exception as e:
             # return HttpResponse(e)
